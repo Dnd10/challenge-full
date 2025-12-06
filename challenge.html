@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Challenge Page</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      overflow-y: auto;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(6px);
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    header .logo img {
+      height:40px; width:40px; object-fit:contain; border-radius:6px; 
+    }
+
+    header nav a
+      { color:#fff; text-decoration:none; margin-left:18px; margin-right:18px; font-weight:600; opacity:0.9 }
+
+    header nav a:hover {
+      opacity: 1;
+    }
+
+    /* Background */
+    .bg-section {
+      position: relative;
+      background: url('images/bg-2.jpg') center/cover no-repeat;
+      flex: 1;
+      padding: 120px 20px 80px 20px;
+    }
+
+    .bg-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      max-width: 1000px;
+      margin: 0 auto;
+      color: #fff;
+    }
+
+    /* Question Boxes */
+    .question-box {
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(6px);
+      border-left: 6px solid #1c172a;
+      margin-bottom: 25px;
+      padding: 20px;
+      border-radius: 12px;
+      position: relative;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    .question-box:hover {
+      transform: translateY(-3px);
+    }
+
+    .question-title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    /* Locked Questions */
+    .question-box.locked {
+      opacity: 0.6;
+    }
+
+    .question-box.locked:hover {
+      opacity: 1;
+      cursor: pointer;
+    }
+
+    .lock-tag {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #13172a;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    /* Footer */
+    footer {
+      background: #1c172a;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    .contact a {
+      color: #66aaff;
+      text-decoration: none;
+      margin: 0 10px;
+      font-size: 16px;
+    }
+
+    .start-btn, .locked-btn {
+      background: #1c172a;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+
+    .start-btn:hover, .locked-btn:hover {
+      background: #3f2a52;
+    }
+
+    /* Dialog */
+    .dialog-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 20;
+    }
+
+    .dialog-box {
+      background: #1c172a;
+      color: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      width: 300px;
+      text-align: center;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <img src="images/logo.png" alt="Logo" />
+        <span>Digits n Data</span>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="instructions.html">Instructions</a>
+      </nav>
+    </header>
+
+    <section class="bg-section">
+      <div class="content">
+
+
+      <div class="question-box"> 
+        <div class="question-title">Question 1: The Etheral Sign (Available Now)</div> 
+        <p>Click to begin this challenge.</p> 
+        <a href="question1.html"><button class="start-btn">Start</button></a> 
+      </div>
+
+      <div class="question-box locked" data-id="1">
+        <div class="question-title">Question 2: The Displacement</div>
+        <div class="lock-tag">Locked + password</div>
+        <button class="locked-btn">Locked</button>
+      </div>
+
+      <div class="question-box locked" data-id="2">
+        <div class="question-title">Question 3: The Rogue Agent</div>
+        <div class="lock-tag">Locked + password</div>
+        <button class="locked-btn">Locked</button>
+      </div>
+
+      <div class="question-box locked" data-id="3">
+        <div class="question-title">Question 4: Trace Black Market Flow</div>
+        <div class="lock-tag">Locked + password</div>
+        <button class="locked-btn">Locked</button>
+      </div>
+
+      <div class="question-box locked" data-id="5">
+        <div class="question-title">Question 5: The Assassin’s Sequence</div>
+        <div class="lock-tag">Locked + password</div>
+        <button class="locked-btn">Locked</button>
+      </div>
+
+      <div class="question-box locked" data-id="6">
+        <div class="question-title">Question 6: Chaos and The Final Jump</div>
+        <div class="lock-tag">Locked + password</div>
+        <button class="locked-btn">Locked</button>
+      </div>
+
+        <div class="question-box"> 
+        <div class="question-title">Question 7: Final Mission (Available Now)</div> 
+        <p>Prepare For Your Last Mission.</p> 
+        <a href="last.html"><button class="start-btn">Read Instructions</button></a> 
+      </div>
+
+      </div>
+    </section>
+
+    <footer>
+      <p>Contact Us:</p>
+      <div class="contact">
+        <a href="https://in.linkedin.com/company/digits-n-data">LinkedIn</a>
+        <a href="mailto:digitsndata@gmail.com">Gmail</a>
+      </div>
+      <p>©Digits n Data. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <div class="dialog-overlay" id="dialog">
+    <div class="dialog-box" id="dialog-content"></div>
+  </div>
+
+  <script>
+  const FUNCTION_URL = "https://bttqxodchlyfkrgvpkia.supabase.co/functions/v1/validate-question";
+
+  // Map question IDs to their respective pages
+  const QUESTION_LINKS = {
+      1: "question2.html",
+      2: "question3.html",
+      3: "question4.html",
+      5: "question5.html",
+      6: "question6.html"
+  };
+
+  function openPasswordDialog(questionId) {
+      const dialog = document.getElementById("dialog");
+      const box = document.getElementById("dialog-content");
+
+      box.innerHTML = `
+          <h3>Enter Password</h3>
+            <p>If your result is <strong>"Mari aile"</strong>, your password becomes <strong>"mariaile"</strong> (all lowercase, no spaces).</p>
+
+            <p>For timestamps, always use the format: <strong>YYYY-MM-DD HH:MM:SS</strong>.</p>
+
+            <p>Your password is always the result from your previous question.  
+            For example: the password for Question 2 is the result you got in Question 1.</p>
+            </p>
+          <input id="pwdInput" type="password" placeholder="Password" style="padding:8px;width:90%;border-radius:6px;">
+          <br><br>
+          <button onclick="submitPassword(${questionId})" class="start-btn">Submit</button>
+          <button onclick="closeDialog()" class="start-btn" style="background:#b30000; margin-left:10px;">Cancel</button>
+      `;
+
+      dialog.style.display = "flex";
+  }
+
+  function closeDialog() {
+      document.getElementById("dialog").style.display = "none";
+  }
+
+  async function submitPassword(qId) {
+      const pwd = document.getElementById("pwdInput").value;
+
+      const res = await fetch(FUNCTION_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ questionId: qId, password: pwd })
+      });
+
+      const data = await res.json();
+
+      // If question is locked by date, show message
+      if (data.locked) {
+          const unlockDate = new Date(data.unlock_at);
+          alert(`❌ This question unlocks on ${unlockDate.toLocaleString()}`);
+          return;
+      }
+
+      if (data.passwordValid) {
+          // Navigate to the correct question page
+          const link = QUESTION_LINKS[qId] || "challenge.html";
+          window.location.href = link;
+      } else {
+          alert("❌ Incorrect password");
+      }
+  }
+
+  async function checkQuestionStatus(id, btn, tag) {
+      const res = await fetch(FUNCTION_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ questionId: id })
+      });
+
+      const data = await res.json();
+
+      // locked by unlock date
+      if (data.locked) {
+          const unlockTime = new Date(data.unlock_at);
+          startCountdown(btn, unlockTime);
+          return;
+      }
+
+      // unlocked by date, needs password
+      btn.style.opacity = "1";
+      btn.style.pointerEvents = "auto";
+      btn.innerText = "Unlock";
+      tag.style.display = "none";
+
+      btn.onclick = () => openPasswordDialog(id);
+  }
+
+  function startCountdown(btn, unlockDate) {
+      btn.disabled = true;
+
+      const timer = setInterval(() => {
+          let now = new Date();
+          let diff = unlockDate - now;
+
+          if (diff <= 0) {
+              clearInterval(timer);
+              location.reload();
+          }
+
+          let hrs = Math.floor(diff / (1000 * 60 * 60));
+          let mins = Math.floor((diff / (1000 * 60)) % 60);
+          let secs = Math.floor((diff / 1000) % 60);
+
+          btn.innerText = `Unlocks in ${hrs}h ${mins}m ${secs}s`;
+      }, 1000);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+      const boxes = document.querySelectorAll(".question-box");
+
+      boxes.forEach((box, index) => {
+          const id = parseInt(box.dataset.id);
+          const btn = box.querySelector("button");
+          const tag = box.querySelector(".lock-tag");
+
+          // Skip Question 1 (already open)
+          if (!id) return;  // Skip only the first box (Q1 has no data-id)
+
+          // Make locked questions clickable on hover permanently
+          box.addEventListener("mouseenter", () => {
+              btn.style.pointerEvents = "auto";
+              btn.onclick = () => openPasswordDialog(id);
+          });
+
+          // Keep faded style
+          btn.style.opacity = "0.6";
+
+          // Check server for actual unlock status
+          checkQuestionStatus(id, btn, tag);
+      });
+  });
+  </script>
+
+</body>
+</html>

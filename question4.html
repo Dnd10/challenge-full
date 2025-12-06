@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Avengers — Timeline Crisis (Challenge)</title>
+<link rel="icon" type="image/png" href="images/favicon2.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap" rel="stylesheet">
+
+
+
+<style>
+  /* ------------------------------
+     Theme variables & base reset
+     ------------------------------ */
+  :root{
+    --bg-img: url('images/bg-2.jpg'); /* background image (replace path if needed) */
+    --glass: rgba(255,255,255,0.03);
+    --panel: rgba(18,26,42,0.7);
+    --accent: #beaedb;
+    --muted: #98a1b3;
+    --text: #e6f1ff;
+    --danger: #ff6584;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    color:var(--text);
+    min-height:100vh;
+    background:
+      linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),  /* dark overlay */
+      var(--bg-img) center/cover no-repeat fixed;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  /* header */
+  header{
+    position:fixed;
+    left:0;right:0;top:0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 32px;
+    background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.15));
+    z-index:30;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+    backdrop-filter: blur(6px);
+  }
+  .brand { display:flex; align-items:center; gap:12px; }
+  .brand img{ height:40px; width:40px; object-fit:contain; border-radius:6px; }
+  .brand .title { font-weight:700; color:var(--accent); font-size:1.05rem }
+  nav a { color:var(--text); text-decoration:none; margin-left:18px; font-weight:600; opacity:0.9 }
+  nav a:hover{ opacity:1; }
+
+  /* page layout */
+  main {
+    padding:110px 40px 60px; /* top padding keeps content below fixed header */
+    max-width:1100px;
+    margin:0 auto;
+  }
+
+  .panel {
+    background: linear-gradient(180deg, rgba(8,12,20,0.65), rgba(12,18,30,0.65));
+    border:1px solid rgba(255,255,255,0.04);
+    border-radius:14px;
+    padding:20px;
+    box-shadow:0 10px 30px rgba(2,6,18,0.6);
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+
+  .layout {
+    display:grid;
+    grid-template-columns: 1fr 520px;
+    gap:22px;
+    align-items:stretch;
+  }
+
+  /* challenge text */
+  
+  .challenge h1{ color:var(--accent); font-size:1.15rem; margin-bottom:8px }
+  .challenge .meta { color:var(--muted); margin-bottom:14px; font-size:0.95rem }
+  .challenge .dataset { margin-top:12px; font-size:0.95rem; color:var(--text) }
+  .dataset table { width:100%; border-collapse:collapse; margin-top:12px; font-size:0.9rem }
+  .dataset th, .dataset td { padding:8px; border-bottom:1px solid rgba(255,255,255,0.03); text-align:left }
+  .dataset th { color:var(--accent); font-weight:700 }
+
+  .challenge h2, .challenge h3 { margin-top: 1.5rem; color: var(--accent); }
+  .challenge p { margin-bottom: 0.8rem; line-height: 1.5; }
+  .challenge ul { 
+    margin-left: 20px; 
+    margin-top: 10px; 
+    margin-bottom: 1rem; 
+    padding-left: 0; 
+  }
+  .challenge ul li { 
+    margin-bottom: 0.5rem; 
+    color: var(--text);
+  }
+  .challenge blockquote {
+    margin: 1.5rem 0;
+    padding: 10px 15px;
+    border-left: 4px solid var(--accent);
+    background: rgba(190, 174, 219, 0.05); /* very light accent background */
+    border-radius: 4px;
+    font-style: italic;
+  }
+  .challenge blockquote p {
+    margin: 0;
+  }
+
+  /* editor column */
+  .editor { display:flex; flex-direction:column; gap:12px }
+  textarea.sql {
+    width:100%;
+    min-height:340px;
+    max-height:58vh;
+    background:rgba(2,10,20,0.8);
+    color:var(--text);
+    border-radius:12px;
+    padding:14px;
+    border:1px solid rgba(255,255,255,0.04);
+    font-family:Menlo, Monaco, 'Courier New', monospace;
+    font-size:13px;
+    resize:vertical;
+  }
+
+  .controls { display:flex; gap:10px; align-items:center; flex-wrap:wrap }
+  .btn {
+    background:var(--accent);
+    color:#022;
+    border:none;
+    padding:10px 14px;
+    border-radius:10px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .btn.secondary{ background:transparent; color:var(--accent); border:1px solid rgba(78,225,160,0.12) }
+
+  .status { margin-top:8px; padding:10px 12px; border-radius:10px; font-weight:700; display:none }
+  .status.pass { background: rgba(78,225,160,0.08); color:var(--accent); border:1px solid rgba(78,225,160,0.12) }
+  .status.fail { background: rgba(255,101,132,0.06); color:var(--danger); border:1px solid rgba(255,101,132,0.08) }
+
+  .output { margin-top:6px; }
+  .output .box { background:linear-gradient(180deg, rgba(0,0,0,0.3), rgba(0,0,0,0.18)); padding:12px; border-radius:10px; min-height:120px; border:1px solid rgba(255,255,255,0.02) }
+
+  .hint { margin-top:10px; display:none; padding:10px; border-left:4px solid var(--accent); background: rgba(255,255,255,0.02); color:var(--muted); border-radius:8px; }
+
+  footer{ margin-top:28px; text-align:center; color:var(--muted); font-size:0.9rem; padding-bottom:36px }
+  @media(max-width:980px){
+    .layout{ grid-template-columns: 1fr; }
+    textarea.sql{ min-height:260px }
+  }
+
+/* Horizontal-scrolling table wrapper */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  padding-bottom: 8px; /* gives breathing room for scrollbar on some OS */
+}
+
+/* Make the table follow its content width so the wrapper scrolls when needed */
+.table-wrapper .data-table {
+  width: max-content;      /* grow to fit columns */
+  min-width: 100%;         /* fill container when small */
+  border-collapse: collapse;
+  table-layout: auto;      /* allow natural column widths */
+}
+
+/* Basic cell styling (keeps your current theme) */
+.table-wrapper .data-table th,
+.table-wrapper .data-table td {
+  padding: 8px;
+  white-space: nowrap;     /* prevents wrapping inside cells which causes unexpected height */
+  border-bottom:1px solid rgba(255,255,255,0.03);
+}
+
+/* subtle edge gradient to hint there's more content */
+.table-wrapper::after{
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 36px;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.35));
+}
+
+
+  
+</style>
+</head>
+<body>
+
+<!-- ====================
+     HEADER / NAV
+     ==================== -->
+<header>
+  <div class="brand">
+    <img src="images/logo.png" alt="Logo">
+    <div>
+      <div class="title">Digits n Data</div>
+      <div style="font-size:0.8rem;color:var(--muted)">Six Weeks To Save Reality - Question 4</div>
+    </div>
+  </div>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="instructions.html">Instructions</a>
+    <a href="challenge.html">Challenges</a>
+  </nav>
+</header>
+
+<!-- ====================
+     MAIN CONTENT
+     ==================== -->
+<main>
+  <div class="layout">
+
+    <!-- LEFT: Challenge text & dataset -->
+    <section class="panel challenge">
+          <h1>Question 4: Trace Black Market Flow</h1>
+
+          <!-- Summary/Problem -->
+
+            <div id="problem">
+            <h2>The Crisis: Black Market</h2>
+            <p>The traitor is identified, a former SHIELD agent who disappeared years ago.</p>
+            <p>Now he works for a shadow group called <b>The Infinity Coalition.</b></p>
+            <p>The data trail leads to a set of shell companies — fake accounts once tied to Stark Industries.</p>
+            <p>But this isn’t about money.</p>
+            <p>Each transfer hides a pattern... energy, not currency. Quantum materials are being moved, piece by piece.</p>
+            <p>The Coalition is building something... another containment unit powerful enough to hold all six Stones.</p>
+            
+
+
+              <!-- TASK / question -->
+            
+              <h1>Your Task:</h1>
+              <p>Find the Account Holder Name who received the largest total transfer from Stark’s ‘QUANTUM_FLOW’ accounts in the past 7 days.</p>
+              
+               <!-- Dataset -->
+                <strong>Dataset: <code>Account_Holders, Stark_Transactions</code></strong>
+
+            <div class="dataset" aria-hidden="false">
+              <section class="panel">
+
+                <h2>Account Holders</h2>
+                <div class="table-wrapper">
+                <table class="data-table">
+                  <thead><tr><th>AccountID</th><th>HolderName</th><th>ContactEmail</th></tr></thead>
+                  <tbody id="table1"></tbody>
+                </table>
+                </div>
+
+                <h2 style="margin-top:25px">Stark Transactions</h2>
+                <div class="table-wrapper">
+                <table class="data-table">
+                  <thead><tr><th>TransactionID</th><th>SenderAccount</th><th>ReceiverAccount</th><th>Amount</th><th>TransactionType</th><th>TransactionDate</th></tr></thead>
+                  <tbody id="table2"></tbody>
+                </table>
+                </div>
+              </section>
+            </div>
+          </div>
+
+                                 <p></p>
+              <hr>
+              <p></p>
+              <h1>Important Notes</h1> 
+            <p>1. The output you generate will serve as your password for the next mission.</p> 
+            <p>2. After completing the task, share the question, your query and an explanation of your approach on LinkedIn before starting next question. Make sure to tag us: <strong><a href="https://www.linkedin.com/in/muskan-kashyap-480182275/">Muskan</a></strong>, <strong><a href ="https://in.linkedin.com/in/nitish-kumar-516aba28b">Nitish</a></strong> and <a href = "https://in.linkedin.com/company/digits-n-data">Digits N Data</a>. Creativity matters!</p> 
+            <p>3. <b>Do NOT share your password or the dataset anywhere.</b></p> 
+            <p>4. If you believe your query is correct but the system marks it incorrect, don’t worry — 
+                there are multiple valid ways to approach SQL problems.  
+                <br><br>
+                In that case:
+                <ul>
+                    <li>Save your result somewhere and use it as the password. If your query is correct, your result will unlock the question., or</li>
+                    <li>If you're stuck, reach out to <a href="https://www.linkedin.com/in/muskan-kashyap-480182275/">Muskan</a> on LinkedIn</li></ul></p>
+            <p>5. Do not copy someone else's work. This will disqualify you immediately.</p>
+            <p>6. Remember, the win isn’t just about getting the query right... it’s about presenting your solution in the most creative and engaging way.</p>
+     
+            <p></p>
+            <hr>
+              <p></p>
+              
+      </section>
+
+
+
+    <!-- RIGHT: Editor + Output -->
+    <aside class="panel editor">
+      <h3 style="color:var(--accent); margin-bottom:6px">SQL Playground</h3>
+
+      <!-- SQL editor -->
+      <textarea id="sql" class="sql" spellcheck="false"></textarea>
+
+      <div class="controls">
+        <button id="runBtn" class="btn">Run Query</button>
+        <button id="hintBtn" class="btn secondary">Show Hint</button>
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+      </div>
+
+
+      <div id="hint" class="hint">
+        💡 <strong>Hint</strong><br>
+        
+        <p>-> Identify a range or list of SenderAccount IDs that represent Stark's 'QUANTUM_FLOW' accounts.</p>
+        <p>-> Filter by 7 days. Try to use DATE(replace with your reference date, '-7 days')</p>
+          
+        <p>-> Once filtered, use the SUM(Amount) function along with a GROUP BY clause on the ReceiverAccount to calculate the total money received by each account.</p>  
+        
+        <p>-> Join the results back to the Account_Holders table.</p>
+        
+      </div>
+
+
+      <div class="output" style="margin-top:12px">
+        <div style="font-weight:700;color:var(--accent);margin-bottom:8px">Query Output</div>
+        <div class="box" id="resultArea">Run your query to see results...</div>
+      </div>
+
+      <!-- Hint -->
+      
+
+    </aside>
+
+  </div>
+
+  <footer class="panel" style="margin-top:22px">
+    © 2025 Digits n Data — Six Weeks To Save Reality
+    <div style="margin-top:8px;font-size:0.85rem;color:var(--muted)">Contact: <a href="mailto:digitsndata@gmail.com" style="color:var(--accent);text-decoration:none">digitsndata@gmail.com</a></div>
+  </footer>
+</main>
+
+<!-- ====================
+     SQL.js + Logic
+     ==================== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/sql-wasm.js"></script>
+<script>
+/*
+  Notes:
+  - This page uses sql.js (wasm) to run a local SQLite instance in the browser.
+  - The dataset below (AvengersData) is created and inserted into the in-browser DB.
+  - The expected SQL (answer) is kept in a variable and used only for automatic checking.
+  - UI elements: #sql (editor), #runBtn, #hintBtn, #status, #resultArea, #hint
+*/
+
+/* ---------- dataset (provided by you) ---------- */
+const datasetSQL = `
+-- Drop tables if they exist to allow re-running
+DROP TABLE IF EXISTS Stark_Transactions;
+DROP TABLE IF EXISTS Account_Holders;
+
+-- Reference Date for "past 7 days" is 2025-11-26.
+-- Therefore, the window is transactions from 2025-11-19 up to 2025-11-26.
+
+-- 1. Account_Holders Table
+CREATE TABLE Account_Holders (
+    AccountID INT PRIMARY KEY,
+    HolderName VARCHAR(100),
+    ContactEmail VARCHAR(100)
+);
+
+INSERT INTO Account_Holders (AccountID, HolderName, ContactEmail) VALUES
+-- Stark's QUANTUM_FLOW Sender Accounts (100-series)
+(101, 'Stark QUANTUM_FLOW Alpha', 'tony@stark.com'),
+(102, 'Stark QUANTUM_FLOW Beta', 'tony@stark.com'),
+(103, 'Stark QUANTUM_FLOW Gamma', 'tony@stark.com'),
+
+-- Recipient Accounts (200-series)
+(201, 'Pepper Potts', 'pepper@stark.com'),
+(202, 'Vision AI Research', 'vision@stark.com'),
+(203, 'Wakanda Treasury', 't.challa@wakanda.gov'),
+(204, 'Scott Lang', 'scott.lang@gmail.com'),
+(205, 'Bruce Banner Fund', 'bruce@hulk.com');
+
+
+-- 2. Stark_Transactions Table
+CREATE TABLE Stark_Transactions (
+    TransactionID INT PRIMARY KEY,
+    SenderAccount INT,
+    ReceiverAccount INT,
+    Amount DECIMAL(10, 2),
+    TransactionType VARCHAR(50),
+    TransactionDate DATE -- Simplified to DATE for easier 7-day filter
+);
+
+INSERT INTO Stark_Transactions (TransactionID, SenderAccount, ReceiverAccount, Amount, TransactionType, TransactionDate) VALUES
+-- ----------------------------------------------------------------------------------------------------------------------------------
+-- Transfers WITHIN the past 7 days (2025-11-19 to 2025-11-26)
+-- ----------------------------------------------------------------------------------------------------------------------------------
+
+-- Pepper Potts (201): Total = 1500000.00
+(1001, 101, 201, 500000.00, 'Wire Transfer', '2025-11-20'),
+(1002, 103, 201, 750000.00, 'Quantum Transfer', '2025-11-24'),
+(1003, 102, 201, 250000.00, 'Quantum Transfer', '2025-11-26'),
+
+-- Vision AI Research (202): Total = 1600000.00
+(1004, 101, 202, 100000.00, 'Quantum Transfer', '2025-11-19'),
+(1005, 103, 202, 1500000.00, 'Wire Transfer', '2025-11-25'),
+
+-- Wakanda Treasury (203): Total = 1200000.00
+(1006, 102, 203, 900000.00, 'Quantum Transfer', '2025-11-22'),
+(1007, 101, 203, 300000.00, 'Wire Transfer', '2025-11-23'),
+
+-- Scott Lang (204): Total = 200000.00
+(1008, 103, 204, 200000.00, 'Quantum Transfer', '2025-11-21'),
+
+-- ----------------------------------------------------------------------------------------------------------------------------------
+-- Transactions to be EXCLUDED
+-- ----------------------------------------------------------------------------------------------------------------------------------
+
+-- EXCLUDE: Transfer outside the 7-day window
+(1009, 101, 205, 5000000.00, 'Wire Transfer', '2025-11-18'),
+
+-- EXCLUDE: Transfer NOT from a QUANTUM_FLOW account (SenderAccount > 103)
+(1010, 201, 202, 10000.00, 'Internal Transfer', '2025-11-25');
+`;
+
+/* ---------- expected SQL (hidden) - used to validate results ----------
+   (kept for automatic checking only; not rendered in UI)
+*/
+const expectedSQL = `
+-- Define the current reference date for the query (2025-11-26)
+-- SQLite requires a reference for date arithmetic.
+-- We use a CTE to ensure the 'Stark's Quantum Flow' accounts (IDs 101, 102, 103)
+-- are the only senders considered within the 7-day window.
+
+WITH Valid_Transfers AS (
+    SELECT
+        ReceiverAccount,
+        Amount
+    FROM
+        Stark_Transactions
+    WHERE
+        -- Filter 1: Check if the sender is one of Stark's QUANTUM_FLOW accounts (IDs 101, 102, 103)
+        SenderAccount IN (101, 102, 103)
+        -- Filter 2: Check if the transaction occurred in the past 7 days (2025-11-19 to 2025-11-26)
+        AND TransactionDate >= DATE('2025-11-26', '-7 days')
+        AND TransactionDate <= '2025-11-26'
+)
+
+SELECT
+    AH.HolderName,
+    SUM(VT.Amount) AS TotalTransferAmount
+FROM
+    Valid_Transfers VT
+INNER JOIN
+    Account_Holders AH ON VT.ReceiverAccount = AH.AccountID
+GROUP BY
+    AH.HolderName
+ORDER BY
+    TotalTransferAmount DESC
+LIMIT 1;
+`;
+
+/* ---------- Helper functions (rendering & canonicalization) ---------- */
+function renderTable(rows, columns){
+  if(!rows || rows.length===0) return '<div style="color:var(--muted)">No rows</div>';
+  let html = '<table border-collapse:collapse"><thead><tr>';
+  html += columns.map(c => `<th style="padding:8px;text-align:left;color:var(--accent)">${c}</th>`).join('');
+  html += '</tr></thead><tbody>';
+  rows.forEach(r=>{
+    html += '<tr>' + columns.map(c=>`<td style="padding:8px;border-bottom:1px solid rgba(255,255,255,0.03)">${r[c]}</td>`).join('') + '</tr>';
+  });
+  html += '</tbody></table>';
+  return html;
+}
+
+function toRows(execResult){
+  if(!execResult) return {columns:[], rows:[]};
+  const cols = execResult.columns || [];
+  const vals = execResult.values || [];
+  const rows = vals.map(v => Object.fromEntries(cols.map((c,i) => [c, v[i]])));
+  return { columns: cols, rows };
+}
+
+function canonicalize(result){
+  const cols = result.columns || [];
+  const rows = result.rows || [];
+  // represent each row as JSON of values in column order, sort to avoid ordering issues
+  return rows.map(r => JSON.stringify(cols.map(c => r[c]))).sort().join('\n');
+}
+
+/* ---------- initialize SQL.js and DB ---------- */
+let db = null;
+
+function render(rows, target){
+  const tbody = document.getElementById(target);
+  tbody.innerHTML = '';
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = Object.values(r).map(v=>`<td>${v}</td>`).join('');
+    tbody.appendChild(tr);
+  });
+}
+
+function toRows(exec){
+  const cols = exec.columns;
+  return exec.values.map(v=>Object.fromEntries(cols.map((c,i)=>[c,v[i]])));
+}
+
+async function init(){
+  const SQL = await window.initSqlJs({ locateFile: file => 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/' + file });
+  db = new SQL.Database();
+  db.run(datasetSQL);
+
+  render(toRows(db.exec("SELECT * FROM Account_Holders")[0]), 'table1');
+  render(toRows(db.exec("SELECT * FROM Stark_Transactions")[0]), 'table2');
+
+  // set default SQL (non-visible correct answer kept separately)
+  document.getElementById('sql').value = `-- Write your SQL query here`;
+
+  // attach events
+  document.getElementById('runBtn').addEventListener('click', runQuery);
+  document.getElementById('hintBtn').addEventListener('click', () => {
+    const hint = document.getElementById('hint');
+    hint.style.display = hint.style.display === 'block' ? 'none' : 'block';
+  });
+}
+
+function render(rows, tbodyId){
+  const tbody = document.getElementById(tbodyId);
+  if(!tbody) return;
+  tbody.innerHTML = '';
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    // ensure order of keys matches thead order (use existing thead headers)
+    tr.innerHTML = Object.values(r).map(v => `<td>${String(v)}</td>`).join('');
+    tbody.appendChild(tr);
+  });
+}
+
+
+/* ---------- Query execution & checking ---------- */
+function showStatus(type, msg){
+  const s = document.getElementById('status');
+  s.style.display = 'block';
+  s.className = 'status ' + (type === 'pass' ? 'pass' : 'fail');
+  s.textContent = msg;
+}
+
+function showResultArea(html){
+  document.getElementById('resultArea').innerHTML = html;
+}
+
+function runQuery(){
+  const code = document.getElementById('sql').value.trim();
+  if(!code){
+    showStatus('fail', 'Please write a SQL query.');
+    return;
+  }
+
+  try{
+    const res = db.exec(code);
+    if(!res || res.length === 0){
+      showResultArea('<div style="color:var(--muted)">No rows returned.</div>');
+      showStatus('fail', 'No rows returned. Verify your query.');
+      return;
+    }
+
+    // render first result set
+    const out = toRows(res[0]);
+    showResultArea(renderTable(out.rows, out.columns));
+
+    // compare with expected (execute expectedSQL)
+    const expectedExec = db.exec(expectedSQL);
+    const expectedRows = expectedExec && expectedExec[0] ? toRows(expectedExec[0]) : {columns:[], rows:[]};
+
+    const passed = canonicalize(out) === canonicalize(expectedRows);
+    if(passed){
+      showStatus('pass', '🎉 You accomplished this mission! So proud of you, Agent!');
+      // optional visual flourish — you can add particle/explosion as in previous pages
+    } else {
+      showStatus('fail', '❌ Output mismatch — check your logic (or compare columns).');
+    }
+
+  }catch(err){
+    showResultArea(`<pre style="color:#ff9b9b">${err.toString()}</pre>`);
+    showStatus('fail', 'SQL error. Check syntax.');
+  }
+}
+
+/* ---------- start ---------- */
+init();
+</script>
+
+</body>
+</html>

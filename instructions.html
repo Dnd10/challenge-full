@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Layout</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      overflow-y: auto;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.086);
+      
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    header .logo img {
+      height:40px; width:40px; object-fit:contain; border-radius:6px; 
+    }
+
+
+    header nav a
+      { color:#fff; text-decoration:none; margin-left:18px; margin-right:18px; font-weight:600; opacity:0.9 }
+
+    header nav a:hover {
+      opacity: 1;
+    }
+
+    /* Background section */
+    .bg-section {
+      position: relative;
+      background: url('images/bg.jpg') center/cover no-repeat;
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 120px 20px 80px 20px; /* top padding to avoid header overlap */
+    }
+
+    .bg-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1;
+    }
+
+    .content-box {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      background: rgba(16, 1, 1, 0.861);
+      backdrop-filter: blur(20px);
+      padding: 30px;
+      border-radius: 12px;
+      color: #fff;
+      height: 60vh;
+      overflow-y: auto;
+      line-height: 1.6;
+    }
+
+    .content-box::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .content-box::-webkit-scrollbar-thumb {
+      background: rgba(181, 179, 179, 0.914);
+      border-radius: 4px;
+    }
+
+    /* Footer */
+    footer {
+      background: #111;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <img src="images/logo.png" alt="Logo" />
+        <span>Digits n Data</span>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="challenge.html">Challenge</a>
+      </nav>
+    </header>
+
+    <section class="bg-section">
+      <div class="content-box">
+        <h1>How to Participate</h1>
+        
+        <p>Welcome to the <strong>Digits N Data Challenge!</strong> This is a <strong>6-week journey</strong> where you solve SQL questions, unlock the next one, and showcase your creativity. Here’s how it works:</p>
+         
+        <hr>
+
+        <h2>Step 1: Stay Updated</h2>
+        <p>Follow <strong><a href = "https://in.linkedin.com/company/digits-n-data">Digits N Data</a></strong>, <strong><a href ="https://in.linkedin.com/in/nitish-kumar-516aba28b">Nitish</a></strong>, and <strong><a href="https://www.linkedin.com/in/muskan-kashyap-480182275/">Muskan</a></strong> on <strong>LinkedIn</strong>. This ensures you don’t miss any updates or hints about the challenge.</p>
+
+        <h2>Step 2: Solve the Questions</h2>
+        <p>There will be <strong>6 questions</strong>, one per week. Each question is like a puzzle—you solve it using SQL queries.</p>
+
+        <h2>Step 3: Share Your Answers</h2>
+        <p>Post your query (every week) <strong>on LinkedIn</strong>, <strong>tag us</strong> (<a href = "https://in.linkedin.com/company/digits-n-data">Digits N Data</a>, <a href ="https://in.linkedin.com/in/nitish-kumar-516aba28b">Nitish</a> and <a href="https://www.linkedin.com/in/muskan-kashyap-480182275/">Muskan</a>) and use hashtags (#SixWeeksToSaveReality, #DNDchallenge, #DigitsnData). Only after submitting your answer will the next question unlock for you.</p>
+
+        <h2>Step 4: Be Creative with Your Final Submission</h2>
+        <p>After completing all 6 questions, you have <strong>2 days</strong> to present your work creatively. You can make a <strong>video, presentation, or any creative format</strong> to show how you solved the queries. Post this on <strong>LinkedIn or YouTube</strong> and <strong>tag us</strong>. We’ll check it out and analyze your work.</p>
+
+        <h2>Step 5: Show Your Creativity</h2>
+        <p>This challenge isn’t just about getting the answers right. We want to see <strong>how you express your work, your style, and your creativity</strong>.</p>
+        
+        <hr>
+        <h1>Rewards – What You Can Win</h1>
+        <ul>
+        <li>Top 3 Winners</li>
+        <p>Spend <strong>3 days at Digits N Data</strong>, join meetings, see how we work and strategize, <strong>earn certificate</strong>, and <strong>20% discount </strong>on our soon-to-launch website .</p>
+
+        <li>Next 5 Winners</li>
+        <p>Spend <strong>1 day with us,</strong> earn certificate and get <strong>15% discount</strong> on our soon-to-launch website.</p>
+
+        <li>Next 10 Winners</li>
+        <p>Receive a <strong>10% discount</strong> on our soon-to-launch website.</p>
+        </ul>
+
+        <hr>
+
+        <h1>Quick Tips to Win</h1>
+        <ul>
+        <li>Solve each question carefully and <strong>ensure your queries are correct</strong>.</li>
+        <li>Be <strong>original and creative</strong> in your final presentation.</li>
+        <li>It’s okay to take help, but <strong>don’t copy</strong>—this is your time to learn, stand out and show your creativity.</li>
+        <li>Don’t forget to post your work on <strong>LinkedIn or YouTube</strong> with proper tags.</li>
+        
+        </ul>
+
+        <hr>
+
+        <h1>Important Notes</h3>
+
+        <ol>
+            <li>
+                Save your queries somewhere safe for the final task 
+                <strong>(we are not storing your queries on our end)</strong>.
+            </li>
+
+            <li>
+                The result you get in each question will act as your 
+                <strong>password for the next question</strong>. If you're stuck here, reach out to <a href="https://www.linkedin.com/in/muskan-kashyap-480182275/">Muskan</a> on Linkedin.
+            </li>
+
+            <li>
+                If you believe your query is correct but the system marks it incorrect, don’t worry — 
+                there are multiple valid ways to approach SQL problems.  
+                <br><br>
+                In that case:
+                <ul>
+                    <li>Save your result somewhere and use it as the password. If your query is correct, your result will unlock the question., or</li>
+                    <li>If you're stuck, either reach out to <a href="https://www.linkedin.com/in/muskan-kashyap-480182275/">Muskan</a> on LinkedIn, or</li>
+                    <li>Email us at <strong>digitsndata@gmail.com</strong></li>
+                </ul>
+            </li>
+
+            <li>
+                If you face any technical glitch on the website and can’t move ahead, 
+                reach out to <a href="https://www.linkedin.com/in/nitish-kumar-516aba28b/"> Nitish</a>,  
+                or email us at <strong>digitsndata@gmail.com</strong>.
+            </li>
+        </ol>
+
+      </div>
+    </section>
+
+    <footer>
+      <p>©Digits n Data. All rights reserved.</p>
+    </footer>
+  </div>
+</body>
+</html>

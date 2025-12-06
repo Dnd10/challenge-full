@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Final Submission Form</title>
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      overflow-y: auto;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(6px);
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    header .logo img {
+      height:40px;
+      width:40px;
+      object-fit:contain;
+      border-radius:6px;
+    }
+
+    header nav a {
+      color:#fff;
+      text-decoration:none;
+      margin: 0 18px;
+      font-weight:600;
+      opacity:0.9;
+    }
+
+    header nav a:hover { opacity:1 }
+
+    .bg-section {
+      position: relative;
+      background: url('images/bg-2.jpg') center/cover no-repeat;
+      flex: 1;
+      padding: 120px 20px 80px 20px;
+    }
+
+    .bg-section::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      margin: 0 auto;
+      color: #fff;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(6px);
+      padding: 30px;
+      border-radius: 12px;
+    }
+
+    h2 {
+      text-align:center;
+      margin-bottom:20px;
+      font-size:26px;
+    }
+
+    label { font-weight:bold; }
+
+    .form-control {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px 12px;
+      margin: 8px 0 20px 0;
+      border-radius: 8px;
+      border: none;
+      box-sizing: border-box;
+    }
+
+    .submit-btn {
+      background:#1c172a;
+      color:#fff;
+      padding:12px 20px;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      width:100%;
+      font-size:18px;
+    }
+
+    .submit-btn:hover { background:#3f2a52 }
+
+    .spinner {
+      width:16px;
+      height:16px;
+      border-radius:50%;
+      border:2px solid rgba(255,255,255,0.25);
+      border-top-color: rgba(255,255,255,0.95);
+      display:inline-block;
+      animation: spin 1s linear infinite;
+      visibility:hidden;
+      margin-left:10px;
+    }
+
+    #finalSubmitBtn.loading .spinner { visibility: visible; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Toast */
+    .message { display:none; }
+    .toast-glass {
+      backdrop-filter: blur(12px);
+      background: rgba(0,0,0,0.35);
+      color:#fff;
+      padding:12px 16px;
+      border-radius:10px;
+      font-weight:600;
+      text-align:center;
+      position:fixed;
+      left:50%;
+      bottom:24px;
+      transform:translateX(-50%);
+      z-index:99999;
+      box-shadow:0 6px 20px rgba(0,0,0,0.45);
+    }
+    .toast-success { color:#42ff9d !important; }
+    .toast-error { color:#ff5f63 !important; }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <header>
+      <div class="logo">
+        <img src="images/logo.png" alt="Logo" />
+        <span>Digits n Data</span>
+      </div>
+
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="instructions.html">Instructions</a>
+        <a href="challenge.html">Challenge</a>
+      </nav>
+    </header>
+
+    <section class="bg-section">
+      <div class="content">
+        <h2>Final Submission</h2>
+        <p><strong>Deadline:</strong> 22nd January</p>
+        <p>Please fill out the form carefully. Winners will be announced through email, our LinkedIn accounts, and the Digits N Data page.</p>
+        <p>We will review your work and contact you on or before 25th January.</p>
+        <p>Your 3-day challenge window will be from 26th–28th January, and the 1-day tasks will be on 30th January.</p>
+        <p>All certificates will be emailed before 10th February. Please keep an eye on your inbox and our LinkedIn updates.</p>
+
+        <!-- ✅ FIXED: ADDED ID -->
+        <form id="finalForm" class="space-y-6">
+
+          <div class="form-control">
+            <label>Name</label>
+            <input type="text" name="name" required>
+          </div>
+
+          <div class="form-control">
+            <label>Email</label>
+            <input type="email" name="email" required>
+          </div>
+
+          <div class="form-control">
+            <label>LinkedIn URL</label>
+            <input type="url" name="linkedin" required>
+          </div>
+
+          <div class="form-control">
+            <label>Mission 01 Post URL</label>
+            <input type="url" name="mission01" required>
+          </div>
+
+          <div class="form-control">
+            <label>Question 1 Post URL</label>
+            <input type="url" name="q1" required>
+          </div>
+
+          <div class="form-control">
+            <label>Question 2 Post URL</label>
+            <input type="url" name="q2" required>
+          </div>
+
+          <div class="form-control">
+            <label>Question 3 Post URL</label>
+            <input type="url" name="q3" required>
+          </div>
+
+          <div class="form-control">
+            <label>Question 4 Post URL</label>
+            <input type="url" name="q4" required>
+          </div>
+
+          <div class="form-control">
+            <label>Question 5 Post URL</label>
+            <input type="url" name="q5" required>
+          </div>
+
+          <div class="form-control">
+            <label>Question 6 Post URL</label>
+            <input type="url" name="q6" required>
+          </div>
+
+          <div class="form-control">
+            <label>Final Submission Post URL</label>
+            <input type="url" name="finalPost" required>
+          </div>
+
+          <div class="form-control">
+            <label>Your experience with Digits n Data</label>
+            <textarea name="exp1" required></textarea>
+          </div>
+
+          <div class="form-control">
+            <label>Your challenge experience</label>
+            <textarea name="exp2" required></textarea>
+          </div>
+
+          <div class="form-control">
+            <label>Permission to contact you?</label>
+            <select name="permission" required>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+
+          <!-- ✅ FIXED: ADDED ID + SPINNER -->
+          <button id="finalSubmitBtn" class="submit-btn" type="submit">
+            Submit
+            <span class="spinner"></span>
+          </button>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- ✅ FIXED: ADDED TOAST MESSAGE CONTAINER -->
+  <div id="finalMessage" class="message"></div>
+
+  
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js";
+
+    const SUPABASE_URL = "https://bttqxodchlyfkrgvpkia.supabase.co";
+    const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0dHF4b2RjaGx5ZmtyZ3Zwa2lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwODM0OTcsImV4cCI6MjA3OTY1OTQ5N30.vMXZSO8IQ6nS2uiXb2MgKl_gks-LvMUbLLe_feMFYP8";
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    const form = document.getElementById("finalForm");
+    const button = document.getElementById("finalSubmitBtn");
+    const message = document.getElementById("finalMessage");
+    let hideTimer = null;
+
+    function showToast(text, type="info", autoHideMs=5000){
+      clearTimeout(hideTimer);
+      message.textContent = text;
+      message.className = "toast-glass";
+      if(type==="success") message.classList.add("toast-success");
+      if(type==="error") message.classList.add("toast-error");
+
+      message.style.display = "block";
+
+      if(autoHideMs > 0){
+        hideTimer = setTimeout(() => {
+          message.style.display = "none";
+        }, autoHideMs);
+      }
+    }
+
+    form.addEventListener("submit", async (e)=>{
+      e.preventDefault();
+
+      button.classList.add("loading");
+      button.setAttribute("disabled","disabled");
+      showToast("Submitting...","info",0);
+
+      const data = Object.fromEntries(new FormData(form));
+      const { error } = await supabase.from("final_submissions").insert([data]);
+
+      button.classList.remove("loading");
+      button.removeAttribute("disabled");
+
+      if(error){
+        showToast("Submission failed. Try again.","error",6000);
+      } else {
+        showToast("Submitted successfully!","success",5000);
+        form.reset();
+      }
+    });
+  </script>
+</body>
+</html>

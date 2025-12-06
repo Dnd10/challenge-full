@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Avengers — Timeline Crisis (Challenge)</title>
+<link rel="icon" type="image/png" href="images/favicon2.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap" rel="stylesheet">
+
+
+
+<style>
+  /* ------------------------------
+     Theme variables & base reset
+     ------------------------------ */
+  :root{
+    --bg-img: url('images/bg-2.jpg'); /* background image (replace path if needed) */
+    --glass: rgba(255,255,255,0.03);
+    --panel: rgba(18,26,42,0.7);
+    --accent: #beaedb;
+    --muted: #98a1b3;
+    --text: #e6f1ff;
+    --danger: #ff6584;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    color:var(--text);
+    min-height:100vh;
+    background:
+      linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),  /* dark overlay */
+      var(--bg-img) center/cover no-repeat fixed;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  /* header */
+  header{
+    position:fixed;
+    left:0;right:0;top:0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 32px;
+    background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.15));
+    z-index:30;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+    backdrop-filter: blur(6px);
+  }
+  .brand { display:flex; align-items:center; gap:12px; }
+  .brand img{ height:40px; width:40px; object-fit:contain; border-radius:6px; }
+  .brand .title { font-weight:700; color:var(--accent); font-size:1.05rem }
+  nav a { color:var(--text); text-decoration:none; margin-left:18px; font-weight:600; opacity:0.9 }
+  nav a:hover{ opacity:1; }
+
+  /* page layout */
+  main {
+    padding:110px 40px 60px; /* top padding keeps content below fixed header */
+    max-width:1100px;
+    margin:0 auto;
+  }
+
+  .panel {
+    background: linear-gradient(180deg, rgba(8,12,20,0.65), rgba(12,18,30,0.65));
+    border:1px solid rgba(255,255,255,0.04);
+    border-radius:14px;
+    padding:20px;
+    box-shadow:0 10px 30px rgba(2,6,18,0.6);
+  }
+
+
+  .layout {
+    display:grid;
+    grid-template-columns: 1fr 520px;
+    gap:22px;
+    align-items:stretch;
+  }
+
+  /* challenge text */
+  
+  .challenge h1{ color:var(--accent); font-size:1.15rem; margin-bottom:8px }
+  .challenge .meta { color:var(--muted); margin-bottom:14px; font-size:0.95rem }
+  .challenge .dataset { margin-top:12px; font-size:0.95rem; color:var(--text) }
+  .dataset table { width:100%; border-collapse:collapse; margin-top:12px; font-size:0.9rem }
+  .dataset th, .dataset td { padding:8px; border-bottom:1px solid rgba(255,255,255,0.03); text-align:left }
+  .dataset th { color:var(--accent); font-weight:700 }
+
+  .challenge h2, .challenge h3 { margin-top: 1.5rem; color: var(--accent); }
+  .challenge p { margin-bottom: 0.8rem; line-height: 1.5; }
+  .challenge ul { 
+    margin-left: 20px; 
+    margin-top: 10px; 
+    margin-bottom: 1rem; 
+    padding-left: 0; 
+  }
+  .challenge ul li { 
+    margin-bottom: 0.5rem; 
+    color: var(--text);
+  }
+  .challenge blockquote {
+    margin: 1.5rem 0;
+    padding: 10px 15px;
+    border-left: 4px solid var(--accent);
+    background: rgba(190, 174, 219, 0.05); /* very light accent background */
+    border-radius: 4px;
+    font-style: italic;
+  }
+  .challenge blockquote p {
+    margin: 0;
+  }
+
+  /* editor column */
+  .editor { display:flex; flex-direction:column; gap:12px }
+  textarea.sql {
+    width:100%;
+    min-height:340px;
+    max-height:58vh;
+    background:rgba(2,10,20,0.8);
+    color:var(--text);
+    border-radius:12px;
+    padding:14px;
+    border:1px solid rgba(255,255,255,0.04);
+    font-family:Menlo, Monaco, 'Courier New', monospace;
+    font-size:13px;
+    resize:vertical;
+  }
+
+  .controls { display:flex; gap:10px; align-items:center; flex-wrap:wrap }
+  .btn {
+    background:var(--accent);
+    color:#022;
+    border:none;
+    padding:10px 14px;
+    border-radius:10px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .btn.secondary{ background:transparent; color:var(--accent); border:1px solid rgba(78,225,160,0.12) }
+
+  .status { margin-top:8px; padding:10px 12px; border-radius:10px; font-weight:700; display:none }
+  .status.pass { background: rgba(78,225,160,0.08); color:var(--accent); border:1px solid rgba(78,225,160,0.12) }
+  .status.fail { background: rgba(255,101,132,0.06); color:var(--danger); border:1px solid rgba(255,101,132,0.08) }
+
+  .output { margin-top:6px; }
+  .output .box { background:linear-gradient(180deg, rgba(0,0,0,0.3), rgba(0,0,0,0.18)); padding:12px; border-radius:10px; min-height:120px; border:1px solid rgba(255,255,255,0.02) }
+
+  .hint { margin-top:10px; display:none; padding:10px; border-left:4px solid var(--accent); background: rgba(255,255,255,0.02); color:var(--muted); border-radius:8px; }
+
+  footer{ margin-top:28px; text-align:center; color:var(--muted); font-size:0.9rem; padding-bottom:36px }
+  @media(max-width:980px){
+    .layout{ grid-template-columns: 1fr; }
+    textarea.sql{ min-height:260px }
+  }
+
+  
+</style>
+</head>
+<body>
+
+<!-- ====================
+     HEADER / NAV
+     ==================== -->
+<header>
+  <div class="brand">
+    <img src="images/logo.png" alt="Logo">
+    <div>
+      <div class="title">Digits n Data</div>
+      <div style="font-size:0.8rem;color:var(--muted)">Six Weeks To Save Reality - Question 1</div>
+    </div>
+  </div>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="instructions.html">Instructions</a>
+    <a href="challenge.html">Challenges</a>
+  </nav>
+</header>
+
+<!-- ====================
+     MAIN CONTENT
+     ==================== -->
+<main>
+  <div class="layout">
+
+    <!-- LEFT: Challenge text & dataset -->
+    <section class="panel challenge">
+          <h1>Question 1: The Etheral Sign</h1>
+
+          <!-- Summary/Problem -->
+
+            <div id="problem">
+            <h2>The Crisis: Timeline Instability Detected</h2>
+            <p>Something is wrong with time itself. Energy readings across the planet are spiking at impossible levels.</p>
+            <p>Then… the unthinkable happens. <b>Tony Stark’s A.I. comes back online</b>... self-reconstructed, half-corrupted, but active.</p>
+            
+            <blockquote>
+                <p>“The timeline is breaking. I detect six distinct energy signatures... all matching the <b>Infinity Stones</b>.”</p>
+            </blockquote>
+
+            <h3>Immediate Assessment Required:</h3>
+            <p>Before doing anything, we must assess Earth’s defense. The Avengers’ systems are outdated. Many records are corrupted. We need to identify our <b>Strongest Defenders</b> immediately.</p>
+            
+            <p>Specifically, we need to know:</p>
+            <ul>
+                <li>Who is still <b>Active</b>?</li>
+                <li>Who is assigned to <b>Primary Defense</b>?</li>
+                <li>Whose <b>Mission Success Rate</b> is higher than the <b>Team Average</b>?</li>
+            </ul>
+
+              <!-- TASK / question -->
+            
+              <h1>Your Task:</h1>
+              <p>Find how many <strong>active Avengers</strong> have a <strong>Mission Success Rate</strong> higher than the team average and are assigned to <strong>Primary Defense</strong>.</p>
+
+
+               <!-- Dataset -->
+
+            <div class="dataset" aria-hidden="false">
+              <strong>Dataset: <code>AvengersData</code></strong>
+              <table>
+                <thead>
+                  <tr><th>AvengerID</th><th>Name</th><th>Status</th><th>MissionSuccessRate</th><th>Assignment</th></tr>
+                </thead>
+                <tbody id="dataset-rows">
+                              </tbody>
+              </table>
+            </div>
+          </div>
+                      <p></p>
+
+            <hr>
+            <p></p>
+            <h1>Important Notes</h1> 
+            <p>1. The output you generate (a single number in this case) will serve as your password for the next mission.</p> 
+            <p>2. After completing the task, share the question, your query and an explanation of your approach on LinkedIn before starting next question. Make sure to tag us: <strong><a href="https://www.linkedin.com/in/muskan-kashyap-480182275/">Muskan</a></strong>, <strong><a href ="https://in.linkedin.com/in/nitish-kumar-516aba28b">Nitish</a></strong> and <a href = "https://in.linkedin.com/company/digits-n-data">Digits N Data</a>. Creativity matters!</p> 
+            <p>3. <b>Do NOT share your password or the dataset anywhere.</b></p> 
+            <p>4. If you believe your query is correct but the system marks it incorrect, don’t worry — 
+                there are multiple valid ways to approach SQL problems.  
+                <br><br>
+                In that case:
+                <ul>
+                    <li>Save your result somewhere and use it as the password. If your query is correct, your result will unlock the question., or</li>
+                    <li>If you're stuck, reach out to <a href="https://www.linkedin.com/in/muskan-kashyap-480182275/">Muskan</a> on LinkedIn</li></ul></p>
+            <p>5. Do not copy someone else's work. This will disqualify you immediately.</p>
+            <p>6. Remember, the win isn’t just about getting the query right... it’s about presenting your solution in the most creative and engaging way.</p>
+
+  
+            <p></p>
+            <hr>
+            <p></p>
+
+      </section>
+
+
+
+    <!-- RIGHT: Editor + Output -->
+    <aside class="panel editor">
+      <h3 style="color:var(--accent); margin-bottom:6px">SQL Playground</h3>
+
+      <!-- SQL editor -->
+      <textarea id="sql" class="sql" spellcheck="false"></textarea>
+
+      <div class="controls">
+        <button id="runBtn" class="btn">Run Query</button>
+        <button id="hintBtn" class="btn secondary">Show Hint</button>
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+      </div>
+
+
+      <div id="hint" class="hint">
+        💡 <strong>Hint</strong><br>
+        <ul>
+        <li>-> Compute the average MissionSuccessRate across the team (a subquery is fine).<br></li>
+        <li>-> Filter for Status = 'Active' and Assignment = 'Primary Defense'.<br></li>
+        <li>-> Compare MissionSuccessRate > average, and COUNT the rows.</li>
+        </ul>
+      </div>
+
+
+      <div class="output" style="margin-top:12px">
+        <div style="font-weight:700;color:var(--accent);margin-bottom:8px">Query Output</div>
+        <div class="box" id="resultArea">Run your query to see results...</div>
+      </div>
+
+      <!-- Hint -->
+      
+
+    </aside>
+
+  </div>
+
+  <footer class="panel" style="margin-top:22px">
+    © 2025 Digits n Data — Six Weeks To Save Reality
+    <div style="margin-top:8px;font-size:0.85rem;color:var(--muted)">Contact: <a href="mailto:digitsndata@gmail.com" style="color:var(--accent);text-decoration:none">digitsndata@gmail.com</a></div>
+  </footer>
+</main>
+
+<!-- ====================
+     SQL.js + Logic
+     ==================== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/sql-wasm.js"></script>
+<script>
+/*
+  Notes:
+  - This page uses sql.js (wasm) to run a local SQLite instance in the browser.
+  - The dataset below (AvengersData) is created and inserted into the in-browser DB.
+  - The expected SQL (answer) is kept in a variable and used only for automatic checking.
+  - UI elements: #sql (editor), #runBtn, #hintBtn, #status, #resultArea, #hint
+*/
+
+/* ---------- dataset (provided by you) ---------- */
+const datasetSQL = `
+CREATE TABLE AvengersData(
+  AvengerID INT,
+  Name TEXT,
+  Status TEXT,
+  MissionSuccessRate REAL,
+  Assignment TEXT
+);
+
+INSERT INTO AvengersData VALUES
+(101,'Iron Man','Active',0.95,'Primary Defense'),
+(102,'Captain America','Active',0.92,'Primary Defense'),
+(103,'Thor','Active',0.85,'Primary Defense'),
+(104,'Hulk','Active',0.86,'Primary Defense'),
+(105,'Black Widow','Active',0.88,'Primary Defense'),
+(106,'Hawkeye','Active',0.65,'Primary Defense'),
+(107,'War Machine','Active',0.72,'Primary Defense'),
+(108,'Doctor Strange','Active',0.90,'Primary Defense'),
+(109,'Spider-Man','Active',0.81,'Support'),
+(110,'Ant-Man','Active',0.55,'Reserve'),
+(111,'Captain Marvel','Active',0.97,'Primary Defense'),
+(112,'Falcon (Sam Wilson)','Active',0.75,'Primary Defense'),
+(113,'She-Hulk','Active',0.84,'Support'),
+(114,'Kate Bishop','Active',0.70,'Reserve'),
+(115,'Monica Rambeau','Active',0.93,'Primary Defense'),
+(116,'Shang-Chi','Active',0.89,'Support');
+`;
+
+/* ---------- expected SQL (hidden) - used to validate results ----------
+   (kept for automatic checking only; not rendered in UI)
+*/
+const expectedSQL = `
+SELECT
+  COUNT(AvengerID) AS StrongDefenders
+FROM
+  AvengersData
+WHERE
+  Status = 'Active'
+  AND Assignment = 'Primary Defense'
+  AND MissionSuccessRate > (
+    SELECT AVG(MissionSuccessRate) FROM AvengersData
+  );
+`;
+
+/* ---------- Helper functions (rendering & canonicalization) ---------- */
+function renderTable(rows, columns){
+  if(!rows || rows.length===0) return '<div style="color:var(--muted)">No rows</div>';
+  let html = '<table style="width:100%; border-collapse:collapse"><thead><tr>';
+  html += columns.map(c => `<th style="padding:8px;text-align:left;color:var(--accent)">${c}</th>`).join('');
+  html += '</tr></thead><tbody>';
+  rows.forEach(r=>{
+    html += '<tr>' + columns.map(c=>`<td style="padding:8px;border-bottom:1px solid rgba(255,255,255,0.03)">${r[c]}</td>`).join('') + '</tr>';
+  });
+  html += '</tbody></table>';
+  return html;
+}
+
+function toRows(execResult){
+  if(!execResult) return {columns:[], rows:[]};
+  const cols = execResult.columns || [];
+  const vals = execResult.values || [];
+  const rows = vals.map(v => Object.fromEntries(cols.map((c,i) => [c, v[i]])));
+  return { columns: cols, rows };
+}
+
+function canonicalize(result){
+  const cols = result.columns || [];
+  const rows = result.rows || [];
+  // represent each row as JSON of values in column order, sort to avoid ordering issues
+  return rows.map(r => JSON.stringify(cols.map(c => r[c]))).sort().join('\n');
+}
+
+/* ---------- initialize SQL.js and DB ---------- */
+let db = null;
+async function init(){
+  const SQL = await window.initSqlJs({ locateFile: file => 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/' + file });
+  db = new SQL.Database();
+  db.run(datasetSQL);
+
+  // inject dataset into visible table for user reference
+  const rows = db.exec("SELECT AvengerID, Name, Status, MissionSuccessRate, Assignment FROM AvengersData");
+  if(rows && rows.length){
+    const to = toRows(rows[0]);
+    const tbody = document.getElementById('dataset-rows');
+    to.rows.forEach(r=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${r.AvengerID}</td><td>${r.Name}</td><td>${r.Status}</td><td>${r.MissionSuccessRate}</td><td>${r.Assignment}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // set default SQL (non-visible correct answer kept separately)
+  document.getElementById('sql').value = `-- Write your SQL query here`;
+
+  // attach events
+  document.getElementById('runBtn').addEventListener('click', runQuery);
+  document.getElementById('hintBtn').addEventListener('click', () => {
+    const hint = document.getElementById('hint');
+    hint.style.display = hint.style.display === 'block' ? 'none' : 'block';
+  });
+}
+
+/* ---------- Query execution & checking ---------- */
+function showStatus(type, msg){
+  const s = document.getElementById('status');
+  s.style.display = 'block';
+  s.className = 'status ' + (type === 'pass' ? 'pass' : 'fail');
+  s.textContent = msg;
+}
+
+function showResultArea(html){
+  document.getElementById('resultArea').innerHTML = html;
+}
+
+function runQuery(){
+  const code = document.getElementById('sql').value.trim();
+  if(!code){
+    showStatus('fail', 'Please write a SQL query.');
+    return;
+  }
+
+  try{
+    const res = db.exec(code);
+    if(!res || res.length === 0){
+      showResultArea('<div style="color:var(--muted)">No rows returned.</div>');
+      showStatus('fail', 'No rows returned. Verify your query.');
+      return;
+    }
+
+    // render first result set
+    const out = toRows(res[0]);
+    showResultArea(renderTable(out.rows, out.columns));
+
+    // compare with expected (execute expectedSQL)
+    const expectedExec = db.exec(expectedSQL);
+    const expectedRows = expectedExec && expectedExec[0] ? toRows(expectedExec[0]) : {columns:[], rows:[]};
+
+    const passed = canonicalize(out) === canonicalize(expectedRows);
+    if(passed){
+      showStatus('pass', '🎉 Well Done, Agent! The Etheral Sign is neutralized. Your query identified Strong Defenders assigned to Primary Defense, ready to protect the timeline.');
+      // optional visual flourish — you can add particle/explosion as in previous pages
+    } else {
+      showStatus('fail', '❌ Output mismatch — check your logic (or compare columns).');
+    }
+
+  }catch(err){
+    showResultArea(`<pre style="color:#ff9b9b">${err.toString()}</pre>`);
+    showStatus('fail', 'SQL error. Check syntax.');
+  }
+}
+
+/* ---------- start ---------- */
+init();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Avengers — Timeline Crisis (Challenge)</title>
+<link rel="icon" type="image/png" href="images/favicon2.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap" rel="stylesheet">
+
+
+
+<style>
+  /* ------------------------------
+     Theme variables & base reset
+     ------------------------------ */
+  :root{
+    --bg-img: url('images/bg-2.jpg'); /* background image (replace path if needed) */
+    --glass: rgba(255,255,255,0.03);
+    --panel: rgba(18,26,42,0.7);
+    --accent: #beaedb;
+    --muted: #98a1b3;
+    --text: #e6f1ff;
+    --danger: #ff6584;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    color:var(--text);
+    min-height:100vh;
+    background:
+      linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),  /* dark overlay */
+      var(--bg-img) center/cover no-repeat fixed;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  /* header */
+  header{
+    position:fixed;
+    left:0;right:0;top:0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 32px;
+    background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.15));
+    z-index:30;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+    backdrop-filter: blur(6px);
+  }
+  .brand { display:flex; align-items:center; gap:12px; }
+  .brand img{ height:40px; width:40px; object-fit:contain; border-radius:6px; }
+  .brand .title { font-weight:700; color:var(--accent); font-size:1.05rem }
+  nav a { color:var(--text); text-decoration:none; margin-left:18px; font-weight:600; opacity:0.9 }
+  nav a:hover{ opacity:1; }
+
+  /* page layout */
+  main {
+    padding:110px 40px 60px; /* top padding keeps content below fixed header */
+    max-width:1100px;
+    margin:0 auto;
+  }
+
+  .panel {
+    background: linear-gradient(180deg, rgba(8,12,20,0.65), rgba(12,18,30,0.65));
+    border:1px solid rgba(255,255,255,0.04);
+    border-radius:14px;
+    padding:20px;
+    box-shadow:0 10px 30px rgba(2,6,18,0.6);
+  }
+
+
+  .layout {
+    display:grid;
+    grid-template-columns: 1fr 520px;
+    gap:22px;
+    align-items:stretch;
+  }
+
+  /* challenge text */
+  
+  .challenge h1{ color:var(--accent); font-size:1.15rem; margin-bottom:8px }
+  .challenge .meta { color:var(--muted); margin-bottom:14px; font-size:0.95rem }
+  .challenge .dataset { margin-top:12px; font-size:0.95rem; color:var(--text) }
+  .dataset table { width:100%; border-collapse:collapse; margin-top:12px; font-size:0.9rem }
+  .dataset th, .dataset td { padding:8px; border-bottom:1px solid rgba(255,255,255,0.03); text-align:left }
+  .dataset th { color:var(--accent); font-weight:700 }
+
+  .challenge h2, .challenge h3 { margin-top: 1.5rem; color: var(--accent); }
+  .challenge p { margin-bottom: 0.8rem; line-height: 1.5; }
+  .challenge ul { 
+    margin-left: 20px; 
+    margin-top: 10px; 
+    margin-bottom: 1rem; 
+    padding-left: 0; 
+  }
+  .challenge ul li { 
+    margin-bottom: 0.5rem; 
+    color: var(--text);
+  }
+  .challenge blockquote {
+    margin: 1.5rem 0;
+    padding: 10px 15px;
+    border-left: 4px solid var(--accent);
+    background: rgba(190, 174, 219, 0.05); /* very light accent background */
+    border-radius: 4px;
+    font-style: italic;
+  }
+  .challenge blockquote p {
+    margin: 0;
+  }
+
+  /* editor column */
+  .editor { display:flex; flex-direction:column; gap:12px }
+  textarea.sql {
+    width:100%;
+    min-height:340px;
+    max-height:58vh;
+    background:rgba(2,10,20,0.8);
+    color:var(--text);
+    border-radius:12px;
+    padding:14px;
+    border:1px solid rgba(255,255,255,0.04);
+    font-family:Menlo, Monaco, 'Courier New', monospace;
+    font-size:13px;
+    resize:vertical;
+  }
+
+  .controls { display:flex; gap:10px; align-items:center; flex-wrap:wrap }
+  .btn {
+    background:var(--accent);
+    color:#022;
+    border:none;
+    padding:10px 14px;
+    border-radius:10px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .btn.secondary{ background:transparent; color:var(--accent); border:1px solid rgba(78,225,160,0.12) }
+
+  .status { margin-top:8px; padding:10px 12px; border-radius:10px; font-weight:700; display:none }
+  .status.pass { background: rgba(78,225,160,0.08); color:var(--accent); border:1px solid rgba(78,225,160,0.12) }
+  .status.fail { background: rgba(255,101,132,0.06); color:var(--danger); border:1px solid rgba(255,101,132,0.08) }
+
+  .output { margin-top:6px; }
+  .output .box { background:linear-gradient(180deg, rgba(0,0,0,0.3), rgba(0,0,0,0.18)); padding:12px; border-radius:10px; min-height:120px; border:1px solid rgba(255,255,255,0.02) }
+
+  .hint { margin-top:10px; display:none; padding:10px; border-left:4px solid var(--accent); background: rgba(255,255,255,0.02); color:var(--muted); border-radius:8px; }
+
+  footer{ margin-top:28px; text-align:center; color:var(--muted); font-size:0.9rem; padding-bottom:36px }
+  @media(max-width:980px){
+    .layout{ grid-template-columns: 1fr; }
+    textarea.sql{ min-height:260px }
+  }
+
+  
+</style>
+</head>
+<body>
+
+<!-- ====================
+     HEADER / NAV
+     ==================== -->
+<header>
+  <div class="brand">
+    <img src="images/logo.png" alt="Logo">
+    <div>
+      <div class="title">Digits n Data</div>
+      <div style="font-size:0.8rem;color:var(--muted)">Six Weeks To Save Reality - Question 3</div>
+    </div>
+  </div>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="instructions.html">Instructions</a>
+    <a href="challenge.html">Challenges</a>
+  </nav>
+</header>
+
+<!-- ====================
+     MAIN CONTENT
+     ==================== -->
+<main>
+  <div class="layout">
+
+    <!-- LEFT: Challenge text & dataset -->
+    <section class="panel challenge">
+          <h1>Question 3: The Rogue Agent</h1>
+
+          <!-- Summary/Problem -->
+
+            <div id="problem">
+            <h2>The Crisis: The truth surfaces</h2>
+            <p>Captain Marvel... Carol Danvers is the one who brought the Stones back.</p>
+            <p>She claims Earth can’t be trusted with them. She refuses to return or explain.</p>
+            <p>But our systems show something worse: internal tampering inside the Avengers Compound.
+            Someone has been disabling the security grid… from within.
+            </p>
+            <blockquote>
+                <p>“We have a traitor.”</p>
+            </blockquote>
+
+
+              <!-- TASK / question -->
+            
+              <h1>Your Task:</h1>
+              <p>Find the email address of the Security Officer who performed the most security sensor overrides within 48 hours after Captain Marvel’s return.</p>
+              
+                     
+
+
+               <!-- Dataset -->
+
+               <strong>Dataset: <code>Compound_Personnel, Security_Logs</code></strong>
+
+            <div class="dataset" aria-hidden="false">
+              
+              <section class="panel">
+                
+                <h2>Compound Personnel</h2>
+                <table>
+                  <thead><tr><th>ID</th><th>Name</th><th>Role</th><th>Email</th></tr></thead>
+                  <tbody id="table1"></tbody>
+                </table>
+
+                <h2 style="margin-top:25px">Security Logs</h2>
+                <table>
+                  <thead><tr><th>LogID</th><th>PersonnelID</th><th>Action</th><th>Timestamp</th></tr></thead>
+                  <tbody id="table2"></tbody>
+                </table>
+
+                       <p></p>
+              <hr>
+              <p></p>
+              <h1>Important Notes</h1> 
+            <p>1. The output you generate will serve as your password for the next mission.</p> 
+            <p>2. After completing the task, share the question, your query and an explanation of your approach on LinkedIn before starting next question. Make sure to tag us: <strong><a href="https://www.linkedin.com/in/muskan-kashyap-480182275/">Muskan</a></strong>, <strong><a href ="https://in.linkedin.com/in/nitish-kumar-516aba28b">Nitish</a></strong> and <a href = "https://in.linkedin.com/company/digits-n-data">Digits N Data</a>. Creativity matters!</p> 
+            <p>3. <b>Do NOT share your password or the dataset anywhere.</b></p> 
+            <p>4. If you believe your query is correct but the system marks it incorrect, don’t worry — 
+                there are multiple valid ways to approach SQL problems.  
+                <br><br>
+                In that case:
+                <ul>
+                    <li>Save your result somewhere and use it as the password. If your query is correct, your result will unlock the question., or</li>
+                    <li>If you're stuck, reach out to <a href="https://www.linkedin.com/in/muskan-kashyap-480182275/">Muskan</a> on LinkedIn</li></ul></p>
+            <p>5. Do not copy someone else's work. This will disqualify you immediately.</p>
+            <p>6. Remember, the win isn’t just about getting the query right... it’s about presenting your solution in the most creative and engaging way.</p>
+     
+            <p></p>
+            <hr>
+              <p></p>
+              
+              </section>
+            </div>
+          </div>
+      </section>
+
+
+
+    <!-- RIGHT: Editor + Output -->
+    <aside class="panel editor">
+      <h3 style="color:var(--accent); margin-bottom:6px">SQL Playground</h3>
+
+      <!-- SQL editor -->
+      <textarea id="sql" class="sql" spellcheck="false"></textarea>
+
+      <div class="controls">
+        <button id="runBtn" class="btn">Run Query</button>
+        <button id="hintBtn" class="btn secondary">Show Hint</button>
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+      </div>
+
+
+      <div id="hint" class="hint">
+        💡 <strong>Hint</strong><br>
+        
+        <p>-> First determine the exact Timestamp of Captain Marvel's return<br></p>
+        <p>-> Once you have the anchor time, you need to filter the remaining logs using two conditions:</p>
+          
+            <p>1. The Action must be 'Security Sensor Override'.</p>
+            <p>2. The log Timestamp must be greater than the anchor time AND less than or equal to the anchor time plus 48 hours.</p>
+          
+        
+        <p>-> Join the results back to the Compound_Personnel table to filter records for only those with the Role = 'Security Officer'.</p>
+        
+      </div>
+
+
+      <div class="output" style="margin-top:12px">
+        <div style="font-weight:700;color:var(--accent);margin-bottom:8px">Query Output</div>
+        <div class="box" id="resultArea">Run your query to see results...</div>
+      </div>
+
+      <!-- Hint -->
+      
+
+    </aside>
+
+  </div>
+
+  <footer class="panel" style="margin-top:22px">
+    © 2025 Digits n Data — Six Weeks To Save Reality
+    <div style="margin-top:8px;font-size:0.85rem;color:var(--muted)">Contact: <a href="mailto:digitsndata@gmail.com" style="color:var(--accent);text-decoration:none">digitsndata@gmail.com</a></div>
+  </footer>
+</main>
+
+<!-- ====================
+     SQL.js + Logic
+     ==================== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/sql-wasm.js"></script>
+<script>
+/*
+  Notes:
+  - This page uses sql.js (wasm) to run a local SQLite instance in the browser.
+  - The dataset below (AvengersData) is created and inserted into the in-browser DB.
+  - The expected SQL (answer) is kept in a variable and used only for automatic checking.
+  - UI elements: #sql (editor), #runBtn, #hintBtn, #status, #resultArea, #hint
+*/
+
+/* ---------- dataset (provided by you) ---------- */
+const datasetSQL = `
+CREATE TABLE Compound_Personnel (
+  PersonnelID INT PRIMARY KEY,
+  Name TEXT,
+  Role TEXT,
+  Email TEXT
+);
+
+INSERT INTO Compound_Personnel VALUES
+(1001,'Carol Danvers','Avenger (Captain Marvel)','carol@avengers.com'),
+(1002,'Maria Hill','Security Officer','maria.hill@shield.com'),
+(1003,'Phil Coulson','Security Officer','phil.coulson@shield.com'),
+(1004,'Jessica Drew','Security Officer','j.drew@avengers.com'),
+(1005,'Hank Pym','Research Scientist','h.pym@avengers.com'),
+(1006,'Peggy Carter','Security Officer','p.carter@avengers.com');
+
+CREATE TABLE Security_Logs (
+  LogID INT PRIMARY KEY,
+  PersonnelID INT,
+  Action TEXT,
+  Timestamp DATETIME
+);
+
+INSERT INTO Security_Logs VALUES
+(1,1001,'Return to Compound','2025-11-20 10:00:00'),
+(2,1002,'Security Sensor Override','2025-11-20 11:30:00'),
+(3,1002,'Gate Lockdown Activated','2025-11-20 12:05:00'),
+(4,1002,'Security Sensor Override','2025-11-21 08:00:00'),
+(5,1002,'Security Sensor Override','2025-21 16:45:00'),
+(6,1003,'System Reboot','2025-11-20 14:00:00'),
+(7,1003,'Security Sensor Override','2025-11-20 22:10:00'),
+(8,1003,'Security Sensor Override','2025-11-21 05:20:00'),
+(9,1003,'Security Sensor Override','2025-11-21 10:30:00'),
+(10,1003,'Security Sensor Override','2025-11-21 19:55:00'),
+(11,1004,'Security Sensor Override','2025-11-21 09:15:00'),
+(12,1004,'Security Sensor Override','2025-11-21 14:40:00'),
+(13,1003,'Security Sensor Override','2025-11-22 11:15:00'),
+(14,1002,'Security Sensor Override','2025-11-23 05:00:00');
+`;
+
+/* ---------- expected SQL (hidden) - used to validate results ----------
+   (kept for automatic checking only; not rendered in UI)
+*/
+const expectedSQL = `
+WITH Captain_Return AS (
+    
+    SELECT
+        MIN(Timestamp) AS ReturnTime
+    FROM
+        Security_Logs
+    WHERE
+        PersonnelID = 1001
+),
+Filtered_Overrides AS (
+    
+    SELECT
+        L.PersonnelID
+    FROM
+        Security_Logs L
+    CROSS JOIN Captain_Return CR
+    WHERE
+        L.Action = 'Security Sensor Override'
+        AND L.Timestamp > CR.ReturnTime
+        AND L.Timestamp <= DATETIME(CR.ReturnTime, '+48 hours')
+),
+Override_Counts AS (
+    
+    SELECT
+        FO.PersonnelID,
+        COUNT(FO.PersonnelID) AS TotalOverrides
+    FROM
+        Filtered_Overrides FO
+    INNER JOIN
+        Compound_Personnel P ON FO.PersonnelID = P.PersonnelID
+    WHERE
+        P.Role = 'Security Officer'
+    GROUP BY
+        FO.PersonnelID
+)
+
+SELECT
+    P.Email,
+    P.Name,
+    OC.TotalOverrides
+FROM
+    Override_Counts OC
+INNER JOIN
+    Compound_Personnel P ON OC.PersonnelID = P.PersonnelID
+ORDER BY
+    OC.TotalOverrides DESC, P.Name ASC -- Use DESC for the highest count, then ASC for tie-breaking
+LIMIT 1;
+`;
+
+/* ---------- Helper functions (rendering & canonicalization) ---------- */
+function renderTable(rows, columns){
+  if(!rows || rows.length===0) return '<div style="color:var(--muted)">No rows</div>';
+  let html = '<table style="width:100%; border-collapse:collapse"><thead><tr>';
+  html += columns.map(c => `<th style="padding:8px;text-align:left;color:var(--accent)">${c}</th>`).join('');
+  html += '</tr></thead><tbody>';
+  rows.forEach(r=>{
+    html += '<tr>' + columns.map(c=>`<td style="padding:8px;border-bottom:1px solid rgba(255,255,255,0.03)">${r[c]}</td>`).join('') + '</tr>';
+  });
+  html += '</tbody></table>';
+  return html;
+}
+
+function toRows(execResult){
+  if(!execResult) return {columns:[], rows:[]};
+  const cols = execResult.columns || [];
+  const vals = execResult.values || [];
+  const rows = vals.map(v => Object.fromEntries(cols.map((c,i) => [c, v[i]])));
+  return { columns: cols, rows };
+}
+
+function canonicalize(result){
+  const cols = result.columns || [];
+  const rows = result.rows || [];
+  // represent each row as JSON of values in column order, sort to avoid ordering issues
+  return rows.map(r => JSON.stringify(cols.map(c => r[c]))).sort().join('\n');
+}
+
+/* ---------- initialize SQL.js and DB ---------- */
+let db = null;
+
+function render(rows, target){
+  const tbody = document.getElementById(target);
+  tbody.innerHTML = '';
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = Object.values(r).map(v=>`<td>${v}</td>`).join('');
+    tbody.appendChild(tr);
+  });
+}
+
+function toRows(exec){
+  const cols = exec.columns;
+  return exec.values.map(v=>Object.fromEntries(cols.map((c,i)=>[c,v[i]])));
+}
+
+async function init(){
+  const SQL = await window.initSqlJs({ locateFile: file => 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/' + file });
+  db = new SQL.Database();
+  db.run(datasetSQL);
+
+  render(toRows(db.exec("SELECT * FROM Compound_Personnel")[0]), 'table1');
+  render(toRows(db.exec("SELECT * FROM Security_Logs")[0]), 'table2');
+
+  // set default SQL (non-visible correct answer kept separately)
+  document.getElementById('sql').value = `-- Write your SQL query here`;
+
+  // attach events
+  document.getElementById('runBtn').addEventListener('click', runQuery);
+  document.getElementById('hintBtn').addEventListener('click', () => {
+    const hint = document.getElementById('hint');
+    hint.style.display = hint.style.display === 'block' ? 'none' : 'block';
+  });
+}
+
+/* ---------- Query execution & checking ---------- */
+function showStatus(type, msg){
+  const s = document.getElementById('status');
+  s.style.display = 'block';
+  s.className = 'status ' + (type === 'pass' ? 'pass' : 'fail');
+  s.textContent = msg;
+}
+
+function showResultArea(html){
+  document.getElementById('resultArea').innerHTML = html;
+}
+
+function runQuery(){
+  const code = document.getElementById('sql').value.trim();
+  if(!code){
+    showStatus('fail', 'Please write a SQL query.');
+    return;
+  }
+
+  try{
+    const res = db.exec(code);
+    if(!res || res.length === 0){
+      showResultArea('<div style="color:var(--muted)">No rows returned.</div>');
+      showStatus('fail', 'No rows returned. Verify your query.');
+      return;
+    }
+
+    // render first result set
+    const out = toRows(res[0]);
+    showResultArea(renderTable(out.rows, out.columns));
+
+    // compare with expected (execute expectedSQL)
+    const expectedExec = db.exec(expectedSQL);
+    const expectedRows = expectedExec && expectedExec[0] ? toRows(expectedExec[0]) : {columns:[], rows:[]};
+
+    const passed = canonicalize(out) === canonicalize(expectedRows);
+    if(passed){
+      showStatus('pass', '🎉 Mission Accomplished, Agent! Tony would be proud of that.');
+      // optional visual flourish — you can add particle/explosion as in previous pages
+    } else {
+      showStatus('fail', '❌ Output mismatch — check your logic (or compare columns).');
+    }
+
+  }catch(err){
+    showResultArea(`<pre style="color:#ff9b9b">${err.toString()}</pre>`);
+    showStatus('fail', 'SQL error. Check syntax.');
+  }
+}
+
+/* ---------- start ---------- */
+init();
+</script>
+
+</body>
+</html>

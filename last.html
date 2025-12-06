@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Layout</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      overflow-y: auto;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.086);
+      
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    header .logo img {
+      height:40px; width:40px; object-fit:contain; border-radius:6px; 
+    }
+
+
+    header nav a
+      { color:#fff; text-decoration:none; margin-left:18px; margin-right:18px; font-weight:600; opacity:0.9 }
+
+    header nav a:hover {
+      opacity: 1;
+    }
+
+    /* Background section */
+    .bg-section {
+      position: relative;
+      background: url('images/hammer.jpg') center/cover no-repeat;
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 120px 20px 80px 20px; /* top padding to avoid header overlap */
+    }
+
+    .bg-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.687);
+      z-index: 1;
+    }
+
+    .content-box {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      background: rgba(16, 1, 1, 0.202);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 12px;
+      color: #fff;
+      height: 60vh;
+      overflow-y: auto;
+      line-height: 1.6;
+    }
+
+    .content-box::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .content-box::-webkit-scrollbar-thumb {
+      background: rgba(181, 179, 179, 0.914);
+      border-radius: 4px;
+    }
+
+    /* Footer */
+    footer {
+      background: #111;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <img src="images/logo.png" alt="Logo" />
+        <span>Digits n Data</span>
+      </div>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="instructions.html">Instructions</a>
+        <a href="challenge.html">Challenges</a>
+      </nav>
+    </header>
+
+    <section class="bg-section">
+      <div class="content-box">
+        <h1>Final Task Instructions — Your Creative Showcase</h1>
+        <p>You’ve completed all six queries. Now it’s time for the part that truly sets you apart.</p>
+        <p>This final task isn’t just about SQL anymore. It’s about how you tell the story of what you did, what you discovered, and how you think. This is the moment where your personality, your creativity, and your voice matter.</p>
+        <p>Here’s what you need to do:</p>
+
+        <hr>
+
+        <h2>1. Collect Everything You’ve Done</h2>
+        <p>Gather:</p>
+        <ul>
+            <li>Each SQL question</li>
+            <li>The query you wrote</li>
+            <li>The answer you arrived at</li>
+        </ul>
+        <p>This is your raw material.</p>
+
+        <hr>
+
+        <h2>2. Explain Your Thinking</h2>
+        <p>For every query:</p>
+        <ul>
+            <li>Explain <strong>what the question was actually asking</strong></li>
+            <li>Describe <strong>how you approached it</strong></li>
+            <li>Share <strong>why you chose that specific query</strong></li>
+            <li>Highlight <strong>what the final answer was</strong></li>
+        </ul>
+        <p>
+        Keep it simple, clear, and human. We're not searching for perfection — 
+        we're looking for <strong>how you think</strong>.
+        </p>
+
+        <hr>
+
+        <h2>3. Present It Creatively</h2>
+        <p>This is where you get to shine.</p>
+        <p>You can choose <strong>any format</strong> that reflects your style:</p>
+
+        <h3>Options you can pick from:</h3>
+        <ul>
+            <li>A mini <strong>presentation</strong> (Google Slides, Canva, Notion — anything)</li>
+            <li>A short <strong>video</strong> where you speak through your process</li>
+            <li>A <strong>storytelling format</strong> (turn the simulation into characters, events, timelines… go wild)</li>
+            <li>A <strong>simple website</strong> or a fun interactive page</li>
+            <li>A <strong>narrated breakdown</strong> as if you're a detective solving a paradox</li>
+            <li>A <strong>comic-strip style</strong> explanation</li>
+            <li>A <strong>sci-fi themed debrief</strong></li>
+            <li>Or something completely your own — surprise us</li>
+        </ul>
+
+        <p>Your goal is not to be fancy.<br>
+        Your goal is to be <strong>memorable</strong>.</p>
+
+        <p>Post it on Linkedin and tag us(<strong><a href = "https://in.linkedin.com/company/digits-n-data">Digits N Data</a></strong>, <strong><a href ="https://in.linkedin.com/in/nitish-kumar-516aba28b">Nitish</a></strong>, and <strong><a href="https://www.linkedin.com/in/muskan-kashyap-480182275/">Muskan</a></strong>).</p>
+
+        <p>
+        Most people will post robotic explanations or copy–paste queries.<br>
+        That’s not what stands out.<br>
+        Your creativity, your clarity, and your voice will.
+        </p>
+
+        <hr>
+
+        <h2>4. Why This Matters</h2>
+        <p>This task isn’t just for the reward from Digits N Data.</p>
+        <p>We genuinely want you to create something that could catch the eye of:</p>
+
+        <ul>
+            <li>Recruiters</li>
+            <li>Collaborators</li>
+            <li>Founders</li>
+            <li>Other learning communities</li>
+        </ul>
+
+        <p>
+        People respond to originality, confidence, and personality far more than generic posts.<br>
+        This is your chance to practice that.
+        </p>
+
+        <hr>
+
+        <h2>5. Final Reminder</h2>
+        <p>Show effort.<br>
+        Show curiosity.<br>
+        Show creativity.<br>
+        Show <em>you</em>.</p>
+
+        <h2>6. Final Submission Form (Important)</h2>
+        <p>Please fill out this form carefully.</p>
+        <p>The deadline is 22nd January.</p>
+        <p>Winners will be announced by 25th January. We will review the posts and forms as they come in — so the earlier you submit, the better. But make sure your work is creative.</p>
+
+        <div class="button-container" style="text-align:center; margin-top:30px;">
+            <a href="finalsubmissionform.html" class="big-btn">Go to Form!</a>
+        </div>
+
+        <p>
+        We’re looking forward to rewarding not just the best query writers, but the ones who 
+        <strong>dare to present differently</strong> — the ones who grab our attention and maybe others’ too.
+        </p>
+
+        <p>Go stand out.<br>
+        This is your moment.</p>
+      </div>
+    </section>
+
+    <footer>
+      <p>©Digits n Data. All rights reserved.</p>
+    </footer>
+  </div>
+</body>
+</html>
