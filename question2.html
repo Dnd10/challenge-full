@@ -448,7 +448,7 @@ function runQuery(){
 
     const passed = canonicalize(out) === canonicalize(expectedRows);
     if(passed){
-      showStatus('pass', '🎉 Excellent Work, Agent! Your temporal scan was accurate. You just saved us a lot of time by isolating the override source to Phil Coulson (phil.coulson@shield.com). We can now trace the security breach.');
+      showStatus('pass', '🎉 Excellent Work, Agent!');
       // optional visual flourish — you can add particle/explosion as in previous pages
     } else {
       showStatus('fail', '❌ Output mismatch — check your query.');
