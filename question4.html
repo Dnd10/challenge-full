@@ -1,21 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RTG8ET73GY"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-  
-    gtag('config', 'G-RTG8ET73GY');
-  </script>
-  
-  <!--end-->
-  
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Question 4</title>
+<title>Avengers — Timeline Crisis (Challenge)</title>
 <link rel="icon" type="image/png" href="images/favicon2.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -518,18 +506,14 @@ function render(rows, target){
   });
 }
 
-function toRows(exec){
-  const cols = exec.columns;
-  return exec.values.map(v=>Object.fromEntries(cols.map((c,i)=>[c,v[i]])));
-}
 
 async function init(){
   const SQL = await window.initSqlJs({ locateFile: file => 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/' + file });
   db = new SQL.Database();
   db.run(datasetSQL);
 
-  render(toRows(db.exec("SELECT * FROM Account_Holders")[0]), 'table1');
-  render(toRows(db.exec("SELECT * FROM Stark_Transactions")[0]), 'table2');
+  render(toRows(db.exec("SELECT * FROM Account_Holders")[0]).rows, 'table1');
+  render(toRows(db.exec("SELECT * FROM Stark_Transactions")[0]).rows, 'table2');
 
   // set default SQL (non-visible correct answer kept separately)
   document.getElementById('sql').value = `-- Write your SQL query here`;
