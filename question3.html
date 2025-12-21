@@ -466,18 +466,15 @@ function render(rows, target){
   });
 }
 
-function toRows(exec){
-  const cols = exec.columns;
-  return exec.values.map(v=>Object.fromEntries(cols.map((c,i)=>[c,v[i]])));
-}
 
 async function init(){
   const SQL = await window.initSqlJs({ locateFile: file => 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/' + file });
   db = new SQL.Database();
   db.run(datasetSQL);
 
-  render(toRows(db.exec("SELECT * FROM Compound_Personnel")[0]), 'table1');
-  render(toRows(db.exec("SELECT * FROM Security_Logs")[0]), 'table2');
+  render(toRows(db.exec("SELECT * FROM Compound_Personnel")[0]).rows, 'table1');
+  render(toRows(db.exec("SELECT * FROM Security_Logs")[0]).rows, 'table2');
+
 
   // set default SQL (non-visible correct answer kept separately)
   document.getElementById('sql').value = `-- Write your SQL query here`;
