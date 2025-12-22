@@ -526,7 +526,17 @@ function runQuery(){
     const expectedExec = db.exec(expectedSQL);
     const expectedRows = expectedExec && expectedExec[0] ? toRows(expectedExec[0]) : {columns:[], rows:[]};
 
-    const passed = canonicalize(out) === canonicalize(expectedRows);
+    function extractEmails(result){
+      return result.rows.map(r => r.Email || r.email || r.EMAIL).sort();
+    }
+    
+    const userEmails = extractEmails(out);
+    const expectedEmails = extractEmails(expectedRows);
+    
+    const passed =
+      userEmails.length === expectedEmails.length &&
+      userEmails.every((v, i) => v === expectedEmails[i]);
+
     if(passed){
       showStatus('pass', '🎉 Mission Accomplished, Agent! Tony would be proud of that.');
       // optional visual flourish — you can add particle/explosion as in previous pages
